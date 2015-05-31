@@ -20,7 +20,8 @@ int main()
 		scanf("%c", &c);
 		array.push_back(c - 'a' + 1);
 	}
-	result = calculateSuffixArray(array, sygma);
+	array.push_back(0);
+	result = calculateSuffixArray(array, sygma + 1);
 	for (int i = 0; i < result.size(); i++)
 	{
 		printf("%d ", result[i]);

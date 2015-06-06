@@ -22,6 +22,10 @@ int main()
 	}
 	array.push_back(0);
 	result = calculateSuffixArray(array, sygma + 1);
+	if (DEBUG)
+	{
+		printf("Result:\n");
+	}
 	for (int i = 0; i < result.size(); i++)
 	{
 		printf("%d ", result[i]);

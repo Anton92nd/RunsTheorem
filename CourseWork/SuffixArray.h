@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <vector>
+#include <cassert>
+#define DEBUG 1
 
 using namespace std;
 
@@ -69,15 +71,31 @@ vector<int*> sortTriples(vector<int*> triples, int sygma)
 			temp[pointers[pnt]++] = triples[i];
 		}
 		triples = temp;
-		for (int i = 0; i < triples.size(); i++)
-		{
-			printf("%d %d %d\n", triples[i][0], triples[i][1], triples[i][2]);
-		}
-		printf("\n");
 	}
 	auto it = unique(triples.begin(), triples.end(), compareTriples);
 	triples.resize(it - triples.begin());
 	return triples;
+}
+
+int findTriple(const vector<int*> & triples, int a, int b, int c)
+{
+	for (int i = 0; i < triples.size(); i++)
+	{
+		if (a == triples[i][0] && b == triples[i][1] && c == triples[i][2])
+			return i;
+	}
+	assert(true);
+	return -1;
+}
+
+vector<int> encodedByTriples(const vector<int> & s, const vector<int*> &triples)
+{
+	vector<int> result;
+	for (int i = 0; i < s.size(); i += 3)
+	{
+		result.push_back(findTriple(triples, s[i], s[i + 1], s[i + 2]));
+	}
+	return result;
 }
 
 vector<int> getS1S2(const vector<int> & s, int sygma)
@@ -92,15 +110,41 @@ vector<int> getS1S2(const vector<int> & s, int sygma)
 		}
 	}
 	triples = sortTriples(triples, sygma);
-	for (int i = 0; i < triples.size(); i++)
+	if (DEBUG)
 	{
-		printf("%d %d %d\n", triples[i][0], triples[i][1], triples[i][2]);
+		printf("Triples sorted:\n");
+		for (int i = 0; i < triples.size(); i++)
+		{
+			printf("%d %d %d\n", triples[i][0], triples[i][1], triples[i][2]);
+		}
 	}
-	return vector<int>();
+	vector<int> s1s2;
+	s1s2.reserve(2 * s.size());
+	for (int i = 1; i < s.size(); i++)
+	{
+		s1s2.push_back(s[i]);
+	}
+	s1s2.push_back(0);
+	for (int i = 2; i < s.size(); i++)
+	{
+		s1s2.push_back(s[i]);
+	}
+	s1s2.push_back(0);
+	s1s2.push_back(0);
+	return encodedByTriples(s1s2, triples);
 }
 
-vector<int> calculateSuffixArray(vector<int> s, int sygma)
+vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 {
+	if (DEBUG)
+	{
+		printf("Calculating array for: ");
+		for (int i = 0; i < s.size(); i++)
+		{
+			printf("%d ", s[i]);
+		}
+		printf("\n");
+	}
 	if (s.size() <= 4)
 	{
 		return sortSimple(s);
@@ -110,5 +154,16 @@ vector<int> calculateSuffixArray(vector<int> s, int sygma)
 		s.push_back(0);
 	}
 	vector<int> s1s2 = getS1S2(s, sygma);
+	if (DEBUG)
+	{
+		printf("S12 encoded by triples:\n");
+		for (int i = 0; i < s1s2.size(); i++)
+		{
+			printf("%d ", s1s2[i]);
+		}
+		printf("\n");
+	}
+	int newSygma = *max_element(s1s2.begin(), s1s2.end()) + 1;
+	vector<int> As12 = calculateSuffixArray(s1s2, newSygma);
 	return vector<int>();
 }

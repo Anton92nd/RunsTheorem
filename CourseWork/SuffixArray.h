@@ -5,9 +5,38 @@ using namespace std;
 
 typedef pair<int, int> pii;
 
+bool isLess(const vector<int> & s, int a, int b)
+{
+	while (a < s.size() && b < s.size() && s[a] == s[b])
+	{
+		a++, b++;
+	}
+	if (a == s.size() || b == s.size())
+	{
+		return a == s.size();
+	}
+	return s[a] < s[b];
+}
+
 vector<int> sortSimple(vector<int> s)
 {
-	return vector<int>();
+	vector<int> result;
+	result.resize(s.size());
+	for (int i = 0; i < s.size(); i++)
+	{
+		result[i] = i;
+	}
+	for (int i = 0; i < s.size(); i++)
+	{
+		for (int j = s.size() - 1; j > i; j--)
+		{
+			if (isLess(s, result[j], result[j - 1]))
+			{
+				swap(result[j], result[j - 1]);
+			}
+		}
+	}
+	return result;
 }
 
 bool compareTriples(int* a, int* b)

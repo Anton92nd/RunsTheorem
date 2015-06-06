@@ -134,6 +134,47 @@ vector<int> getS1S2(const vector<int> & s, int sygma)
 	return encodedByTriples(s1s2, triples);
 }
 
+vector<pii> stableSortPairsByFirst(const vector<pii> & pairs, int sygma)
+{
+	vector<int> baskets, pointers;
+	baskets.resize(sygma);
+	pointers.resize(sygma);
+	for (int i = 0; i < pairs.size(); i++)
+	{
+		baskets[pairs[i].first]++;
+	}
+	for (int i = 1; i < sygma; i++)
+	{
+		pointers[i] = pointers[i - 1] + baskets[i];
+	}
+	vector<pii> result;
+	result.resize(pairs.size());
+	for (int i = 0; i < pairs.size(); i++)
+	{
+		result[pointers[pairs[i].first]] = pairs[i];
+		pointers[pairs[i].first]++;
+	}
+	return result;
+}
+
+vector<int> getAs0(const vector<int> & s, const vector<int> & As12, int sygma)
+{
+	vector<pii> M;
+	for (int i = 0; i < 2 * s.size() / 3; i++)
+	{
+		if (As12[i] % 3 == 1)
+			M.push_back(pii(s[As12[i] - 1], As12[i]));
+	}
+	M = stableSortPairsByFirst(M, sygma);
+	vector<int> result;
+	result.resize(M.size());
+	for (int i = 0; i < M.size(); i++)
+	{
+		result[i] = M[i].second - 1;
+	}
+	return result;
+}
+
 vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 {
 	if (DEBUG)
@@ -153,6 +194,7 @@ vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 	{
 		s.push_back(0);
 	}
+	int n = s.size();
 	vector<int> s1s2 = getS1S2(s, sygma);
 	if (DEBUG)
 	{
@@ -165,5 +207,10 @@ vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 	}
 	int newSygma = *max_element(s1s2.begin(), s1s2.end()) + 1;
 	vector<int> As12 = calculateSuffixArray(s1s2, newSygma);
+	for (int i = 0; i < As12.size(); i++)
+	{
+		As12[i] = (As12[i] < n / 3) ? 3 * As12[i] + 1 : 3 * (As12[i] - n / 3) + 2;
+	}
+	vector<int> As0 = getAs0(s, As12, sygma);
 	return vector<int>();
 }

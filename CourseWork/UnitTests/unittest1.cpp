@@ -22,13 +22,14 @@ namespace UnitTests
 
 		void verifySA(const vector<int> & array, const vector<int> & str)
 		{
-			Assert::AreEqual(array.size(), str.size());
-			for (int i = 0; i < array.size() - 1; i++)
+			int n = str.size();
+			Assert::AreEqual((int)array.size(), n);
+			for (int i = 0; i < n - 1; i++)
 			{
 				int pos1 = array[i], pos2 = array[i + 1];
-				for (; pos1 < str.size() && pos2 < str.size() && str[pos1] == str[pos2]; pos1++, pos2++);
-				Assert::IsFalse(pos2 == str.size());
-				if (pos1 < str.size())
+				for (; pos1 < n && pos2 < n && str[pos1] == str[pos2]; pos1++, pos2++);
+				Assert::IsFalse(pos2 == n);
+				if (pos1 < n)
 					Assert::IsTrue(str[pos1] < str[pos2]);
 			}
 		}
@@ -79,16 +80,16 @@ namespace UnitTests
 
 		TEST_METHOD(TestLargeRandomString)
 		{
-			vector<int> str = generateRandomString(100000, 26);
-			auto result = calculateSuffixArray(str, 26);
-			//verifySA(result, str);
+			vector<int> str = generateRandomString(100000, 100);
+			auto result = calculateSuffixArray(str, 100);
+			verifySA(result, str);
 		}
 
 		TEST_METHOD(TestVeryLargeRandomString)
 		{
-			vector<int> str = generateRandomString(1000000, 26);
-			auto result = calculateSuffixArray(str, 26);
-			//verifySA(result, str);
+			vector<int> str = generateRandomString(1000000, 100);
+			auto result = calculateSuffixArray(str, 100);
+			verifySA(result, str);
 		}
 
 		TEST_METHOD(TestSortedTriples)

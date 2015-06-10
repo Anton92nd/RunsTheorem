@@ -22,5 +22,33 @@ namespace UnitTests
 			}
 		}
 
+		TEST_METHOD(TestSortedAndUniqueTriples)
+		{
+			vector<int*> triples;
+			triples.push_back(new int[3] {2, 2, 1});
+			triples.push_back(new int[3] {2, 1, 3});
+			triples.push_back(new int[3] {3, 1, 2});
+			triples.push_back(new int[3] {1, 2, 0});
+			triples.push_back(new int[3] {0, 0, 0});
+			triples.push_back(new int[3] {3, 1, 2});
+			triples.push_back(new int[3] {3, 1, 3});
+			auto result = sortTriples(triples, 4);
+			vector<int*> expected;
+			expected.push_back(new int[3] {0, 0, 0});
+			expected.push_back(new int[3] {1, 2, 0});
+			expected.push_back(new int[3] {2, 1, 3});
+			expected.push_back(new int[3] {2, 2, 1});
+			expected.push_back(new int[3] {3, 1, 2});
+			expected.push_back(new int[3] {3, 1, 3});
+			Assert::AreEqual(expected.size(), result.size());
+			for (int i = 0; i < expected.size(); i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					Assert::AreEqual(expected[i][j], result[i][j]);
+				}
+			}
+		}
+
 	};
 }

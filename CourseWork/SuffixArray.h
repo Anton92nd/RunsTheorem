@@ -268,11 +268,18 @@ vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 		printf("\n");
 	}
 	int newSygma = *max_element(s1s2.begin(), s1s2.end()) + 1;
-	vector<int> As12 = calculateSuffixArray(s1s2, newSygma);
-	for (int i = 0; i < As12.size(); i++)
+	vector<int> ss = calculateSuffixArray(s1s2, newSygma);
+	vector<int> As12;
+	As12.reserve(2 * n / 3);
+	for (int i = 0; i < ss.size(); i++)
 	{
-		As12[i] = (As12[i] < n / 3) ? 3 * As12[i] + 1 : 3 * (As12[i] - n / 3) + 2;
+		int newPos = (ss[i] < n / 3) ? 3 * ss[i] + 1 : 3 * (ss[i] - n / 3) + 2;
+		if (newPos < s.size())
+			As12.push_back(newPos);
 	}
 	vector<int> As0 = getAs0(s, As12, sygma);
-	return mergeParts(s, As0, As12);
+	vector<int> result = mergeParts(s, As0, As12);
+	while (result.size() > s.size())
+		result.pop_back();
+	return result;
 }

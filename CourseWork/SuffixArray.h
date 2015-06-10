@@ -1,12 +1,36 @@
 #include <algorithm>
 #include <vector>
 #include <cassert>
-#define DEBUG 1
+#define DEBUG 0
 
 using namespace std;
 
 typedef pair<int, int> pii;
 typedef pair<int, pair<int, int>> trii;
+
+struct Triple{
+	int num;
+	int ar[3];
+
+	Triple()
+	{
+		num = 0;
+		ar[0] = ar[1] = ar[2] = 0;
+	}
+
+	Triple(int _num, int _a, int _b, int _c)
+	{
+		num = _num;
+		ar[0] = _a;
+		ar[1] = _b;
+		ar[2] = _c;
+	}
+
+	bool operator!=(const Triple & other)const
+	{
+		return ar[0] != other.ar[0] || ar[1] != other.ar[1] || ar[2] != other.ar[2];
+	}
+};
 
 bool isLess(const vector<int> & s, int a, int b)
 {
@@ -42,15 +66,10 @@ vector<int> sortSimple(vector<int> s)
 	return result;
 }
 
-bool compareTriples(int* a, int* b)
-{
-	return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
-}
-
-vector<int*> sortTriples(vector<int*> triples, int sygma)
+void sortTriples(vector<Triple> & triples, int sygma)
 {
 	vector<int> baskets, pointers;
-	vector<int*> temp;
+	vector<Triple> temp;
 	temp.resize(triples.size());
 	for (int j = 2; j >= 0; j--)
 	{
@@ -60,7 +79,7 @@ vector<int*> sortTriples(vector<int*> triples, int sygma)
 		pointers.resize(sygma, 0);
 		for (int i = 0; i < triples.size(); i++)
 		{
-			baskets[triples[i][j]]++;
+			baskets[triples[i].ar[j]]++;
 		}
 		for (int i = 1; i < sygma; i++)
 		{
@@ -68,71 +87,36 @@ vector<int*> sortTriples(vector<int*> triples, int sygma)
 		}
 		for (int i = 0; i < triples.size(); i++)
 		{
-			int pnt = triples[i][j];
+			int pnt = triples[i].ar[j];
 			temp[pointers[pnt]++] = triples[i];
 		}
 		triples = temp;
 	}
-	auto it = unique(triples.begin(), triples.end(), compareTriples);
-	triples.resize(it - triples.begin());
-	return triples;
-}
-
-int findTriple(const vector<int*> & triples, int a, int b, int c)
-{
-	for (int i = 0; i < triples.size(); i++)
-	{
-		if (a == triples[i][0] && b == triples[i][1] && c == triples[i][2])
-			return i;
-	}
-	assert(true);
-	return -1;
-}
-
-vector<int> encodedByTriples(const vector<int> & s, const vector<int*> &triples)
-{
-	vector<int> result;
-	for (int i = 0; i < s.size(); i += 3)
-	{
-		result.push_back(findTriple(triples, s[i], s[i + 1], s[i + 2]));
-	}
-	return result;
 }
 
 vector<int> getS1S2(const vector<int> & s, int sygma)
 {
-	vector<int*> triples;
-	triples.reserve(s.size());
-	for (int i = 0; i < s.size(); i++)
+	vector<Triple> triples;
+	int n = s.size();
+	for (int i = 1, j = 0; i < n; i += 3, j++)
 	{
-		if (i % 3 != 0)
-		{
-			triples.push_back(new int[3] {s[i], (i + 1 < s.size() ? s[i + 1] : 0), (i + 2 < s.size() ? s[i + 2] : 0)});
-		}
+		triples.push_back(Triple(j, s[i], i + 1 < n ? s[i + 1] : 0, i + 2 < n ? s[i + 2] : 0));
 	}
-	triples = sortTriples(triples, sygma);
-	if (DEBUG)
+	for (int i = 2, j = n / 3; i < n; i += 3, j++)
 	{
-		printf("Triples sorted:\n");
-		for (int i = 0; i < triples.size(); i++)
-		{
-			printf("%d %d %d\n", triples[i][0], triples[i][1], triples[i][2]);
-		}
+		triples.push_back(Triple(j, s[i], i + 1 < n ? s[i + 1] : 0, i + 2 < n ? s[i + 2] : 0));
 	}
-	vector<int> s1s2;
-	s1s2.reserve(2 * s.size());
-	for (int i = 1; i < s.size(); i++)
+	sortTriples(triples, sygma);
+	vector<int> result;
+	result.resize(2 * n / 3);
+	int num = 0;
+	result[triples[0].num] = 0;
+	for (int i = 1; i < triples.size(); i++)
 	{
-		s1s2.push_back(s[i]);
+		num += (triples[i] != triples[i - 1]);
+		result[triples[i].num] = num;
 	}
-	s1s2.push_back(0);
-	for (int i = 2; i < s.size(); i++)
-	{
-		s1s2.push_back(s[i]);
-	}
-	s1s2.push_back(0);
-	s1s2.push_back(0);
-	return encodedByTriples(s1s2, triples);
+	return result;
 }
 
 vector<pii> stableSortPairsByFirst(const vector<pii> & pairs, int sygma)

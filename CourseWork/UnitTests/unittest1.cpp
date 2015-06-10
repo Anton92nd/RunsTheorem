@@ -77,30 +77,45 @@ namespace UnitTests
 			verifySA(result, str);
 		}
 
-		TEST_METHOD(TestSortedAndUniqueTriples)
+		TEST_METHOD(TestLargeRandomString)
 		{
-			vector<int*> triples;
-			triples.push_back(new int[3] {2, 2, 1});
-			triples.push_back(new int[3] {2, 1, 3});
-			triples.push_back(new int[3] {3, 1, 2});
-			triples.push_back(new int[3] {1, 2, 0});
-			triples.push_back(new int[3] {0, 0, 0});
-			triples.push_back(new int[3] {3, 1, 2});
-			triples.push_back(new int[3] {3, 1, 3});
-			auto result = sortTriples(triples, 4);
-			vector<int*> expected;
-			expected.push_back(new int[3] {0, 0, 0});
-			expected.push_back(new int[3] {1, 2, 0});
-			expected.push_back(new int[3] {2, 1, 3});
-			expected.push_back(new int[3] {2, 2, 1});
-			expected.push_back(new int[3] {3, 1, 2});
-			expected.push_back(new int[3] {3, 1, 3});
-			Assert::AreEqual(expected.size(), result.size());
+			vector<int> str = generateRandomString(100000, 26);
+			auto result = calculateSuffixArray(str, 26);
+			//verifySA(result, str);
+		}
+
+		TEST_METHOD(TestVeryLargeRandomString)
+		{
+			vector<int> str = generateRandomString(1000000, 26);
+			auto result = calculateSuffixArray(str, 26);
+			//verifySA(result, str);
+		}
+
+		TEST_METHOD(TestSortedTriples)
+		{
+			vector<Triple> triples;
+			triples.push_back(Triple(0, 2, 2, 1));
+			triples.push_back(Triple(0, 2, 1, 3));
+			triples.push_back(Triple(0, 3, 1, 2));
+			triples.push_back(Triple(0, 1, 2, 0));
+			triples.push_back(Triple(0, 0, 0, 0));
+			triples.push_back(Triple(0, 3, 1, 2));
+			triples.push_back(Triple(0, 3, 1, 3));
+			sortTriples(triples, 4);
+			vector<Triple> expected;
+			expected.push_back(Triple(0, 0, 0, 0));
+			expected.push_back(Triple(0, 1, 2, 0));
+			expected.push_back(Triple(0, 2, 1, 3));
+			expected.push_back(Triple(0, 2, 2, 1));
+			expected.push_back(Triple(0, 3, 1, 2));
+			expected.push_back(Triple(0, 3, 1, 2));
+			expected.push_back(Triple(0, 3, 1, 3));
+			Assert::AreEqual(expected.size(), triples.size());
 			for (int i = 0; i < expected.size(); i++)
 			{
 				for (int j = 0; j < 3; j++)
 				{
-					Assert::AreEqual(expected[i][j], result[i][j]);
+					Assert::AreEqual(expected[i].ar[j], triples[i].ar[j]);
 				}
 			}
 		}

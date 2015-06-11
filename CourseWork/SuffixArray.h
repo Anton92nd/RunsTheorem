@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <vector>
-#include <cassert>
 #define DEBUG 0
 
 using namespace std;

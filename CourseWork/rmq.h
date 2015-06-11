@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <vector>
+#define DEBUG 1
 
 using namespace std;
 
@@ -8,6 +9,7 @@ struct Node{
 	Node *l, *r, *p;
 	Node() : x(0), y(0), l(NULL), r(NULL), p(NULL){}
 	Node(int _x, int _y) : x(_x), y(_y), l(NULL), r(NULL), p(NULL){}
+	Node(int _x, int _y, Node *_l, Node *_r) : x(_x), y(_y), l(_l), r(_r){}
 };
 
 typedef Node* Pnode;
@@ -18,6 +20,8 @@ class RMQ
 private:
 	vector<int> array;
 	vector<pii> pairs;
+	vector<int> first;
+	Pnode tree;
 
 	void appendNode(Pnode & root, Pnode & last, Pnode v)
 	{
@@ -28,12 +32,18 @@ private:
 		if (last == NULL)
 		{
 			v->l = root;
+			root->p = v;
 			root = v;
 			last = root;
 			return;
 		}
 		v->l = last->r;
+		if (last->r != NULL)
+		{
+			last->r->p = v;
+		}
 		last->r = v;
+		v->p = last;
 		last = v;
 	}
 
@@ -57,15 +67,53 @@ private:
 		printCartesian(T->r);
 	}
 
+	void buildPairs(Pnode T, int depth)
+	{
+		first[T->x] = pairs.size();
+		pairs.push_back(pii(T->x, depth));
+		if (T->l != NULL)
+		{
+			buildPairs(T->l, depth + 1);
+			pairs.push_back(pii(T->x, depth));
+		}
+		if (T->r != NULL)
+		{
+			buildPairs(T->r, depth + 1);
+			pairs.push_back(pii(T->x, depth));
+		}
+	}
+
 	void buildYourself()
 	{
-		Pnode root = buildCartesian();
-		printCartesian(root);
+		tree = buildCartesian();
+		if (DEBUG)
+			printCartesian(tree);
+		pairs.reserve(2 * array.size());
+		first.resize(array.size());
+		buildPairs(tree, 0);
+		if (DEBUG)
+		{
+			printf("RMQ +/-1:\n");
+			for (int i = 0; i < pairs.size(); i++)
+			{
+				printf("%d %d\n", pairs[i].first, pairs[i].second);
+			}
+		}
 	}
 public:
 	RMQ(vector<int> array)
 	{
 		this->array = array;
 		buildYourself();
+	}
+
+	vector<pii> getPairs()
+	{
+		return pairs;
+	}
+
+	Pnode getTree()
+	{
+		return tree;
 	}
 };

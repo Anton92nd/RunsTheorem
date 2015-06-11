@@ -1,11 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "SuffixArray.h"
+#include "rmq.h"
 #include <iostream>
 #include <cstdio>
 
 using namespace std;
 
-vector<int> array, result;
+vector<int> array, sa, lcp;
 
 int main()
 {
@@ -21,14 +22,26 @@ int main()
 		array.push_back(c - 'a' + 1);
 	}
 	array.push_back(0);
-	result = calculateSuffixArray(array, sygma + 1);
+	sa = calculateSuffixArray(array, sygma + 1);
 	if (DEBUG)
 	{
 		printf("Result:\n");
 	}
-	for (int i = 0; i < result.size(); i++)
+	for (int i = 0; i < sa.size(); i++)
 	{
-		printf("%d ", result[i]);
+		printf("%d ", sa[i]);
 	}
+	printf("\n");
+	lcp = calculateLCP(array, sa);
+	if (DEBUG)
+	{
+		printf("LCP:\n");
+		for (int i = 0; i < lcp.size(); i++)
+		{
+			printf("%d ", lcp[i]);
+		}
+		printf("\n");
+	}
+	RMQ rmq(lcp);
 	return 0;
 }

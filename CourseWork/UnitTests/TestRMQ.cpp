@@ -38,17 +38,16 @@ namespace UnitTests
 		{
 			vector<int> numbers = { 2, 3, 0, 3, 4, 1 };
 			RMQ rmq(numbers);
-			auto result = rmq.getPairs();
-			vector<pii> expected = 
+			auto depths = rmq.getDepths();
+			auto vertices = rmq.getVertices();
+			vector<int> expectedDepths = {0, 1, 2, 1, 0, 1, 2, 3, 2, 1, 0};
+			vector<int> expectedVertices = {2, 0, 1, 0, 2, 5, 3, 4, 3, 5, 2};
+			Assert::AreEqual(expectedDepths.size(), depths.size());
+			Assert::AreEqual(expectedVertices.size(), vertices.size());
+			for (int i = 0; i < expectedVertices.size(); i++)
 			{
-				pii(2, 0), pii(0, 1), pii(1, 2), pii(0, 1), pii(2, 0),
-				pii(5, 1), pii(3, 2), pii(4, 3), pii(3, 2), pii(5, 1), pii(2, 0)
-			};
-			Assert::AreEqual(expected.size(), result.size());
-			for (int i = 0; i < expected.size(); i++)
-			{
-				Assert::AreEqual(expected[i].first, result[i].first);
-				Assert::AreEqual(expected[i].second, result[i].second);
+				Assert::AreEqual(expectedVertices[i], vertices[i]);
+				Assert::AreEqual(expectedDepths[i], depths[i]);
 			}
 		}
 	};

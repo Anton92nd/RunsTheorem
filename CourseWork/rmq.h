@@ -19,7 +19,8 @@ class RMQ
 {
 private:
 	vector<int> array;
-	vector<pii> pairs;
+	vector<int> depths;
+	vector<int> vertices;
 	vector<int> first;
 	Pnode tree;
 
@@ -69,17 +70,20 @@ private:
 
 	void buildPairs(Pnode T, int depth)
 	{
-		first[T->x] = pairs.size();
-		pairs.push_back(pii(T->x, depth));
+		first[T->x] = vertices.size();
+		depths.push_back(depth);
+		vertices.push_back(T->x);
 		if (T->l != NULL)
 		{
 			buildPairs(T->l, depth + 1);
-			pairs.push_back(pii(T->x, depth));
+			depths.push_back(depth);
+			vertices.push_back(T->x);
 		}
 		if (T->r != NULL)
 		{
 			buildPairs(T->r, depth + 1);
-			pairs.push_back(pii(T->x, depth));
+			depths.push_back(depth);
+			vertices.push_back(T->x);
 		}
 	}
 
@@ -88,15 +92,16 @@ private:
 		tree = buildCartesian();
 		if (DEBUG)
 			printCartesian(tree);
-		pairs.reserve(2 * array.size());
+		depths.reserve(2 * array.size());
+		vertices.reserve(2 * array.size());
 		first.resize(array.size());
 		buildPairs(tree, 0);
 		if (DEBUG)
 		{
 			printf("RMQ +/-1:\n");
-			for (int i = 0; i < pairs.size(); i++)
+			for (int i = 0; i < vertices.size(); i++)
 			{
-				printf("%d %d\n", pairs[i].first, pairs[i].second);
+				printf("%d %d\n", vertices[i], depths[i]);
 			}
 		}
 	}
@@ -107,9 +112,14 @@ public:
 		buildYourself();
 	}
 
-	vector<pii> getPairs()
+	vector<int> getDepths()
 	{
-		return pairs;
+		return depths;
+	}
+
+	vector<int> getVertices()
+	{
+		return vertices;
 	}
 
 	Pnode getTree()

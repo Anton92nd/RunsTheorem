@@ -267,3 +267,28 @@ vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 		result.pop_back();
 	return result;
 }
+
+vector<int> calculateLCP(const vector<int> & s, const vector<int> sa)
+{
+	int n = s.size();
+	vector<int> isa = inverse(sa, n);
+	vector<int> lcp(n);
+	int k = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (k > 0) k--;
+		if (isa[i] == n - 1)
+		{
+			lcp[n - 1] = -1;
+			k = 0;
+		}
+		else
+		{
+			int j = sa[isa[i] + 1];
+			while (max(i + k, j + k) < n && s[i + k] == s[j + k])
+				k++;
+			lcp[isa[i]] = k;
+		}
+	}
+	return lcp;
+}

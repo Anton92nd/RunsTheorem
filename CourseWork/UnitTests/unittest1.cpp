@@ -34,7 +34,7 @@ namespace UnitTests
 			}
 		}
 	public:
-		
+
 		TEST_METHOD_INITIALIZE(SetUp)
 		{
 			srand(time(NULL));
@@ -56,7 +56,7 @@ namespace UnitTests
 		{
 			vector<int> str = { 1, 2, 1, 2, 2, 2, 1, 1, 0 };
 			auto result = calculateSuffixArray(str, 3);
-			vector<int> expected = {8, 7, 6, 0, 2, 5, 1, 4, 3};
+			vector<int> expected = { 8, 7, 6, 0, 2, 5, 1, 4, 3 };
 			Assert::AreEqual(str.size(), result.size());
 			for (int i = 0; i < expected.size(); i++)
 			{
@@ -124,7 +124,7 @@ namespace UnitTests
 
 		TEST_METHOD(TestStableSortPairsByFirst)
 		{
-			vector<pii> toSort = 
+			vector<pii> toSort =
 			{
 				pii(2, 1),
 				pii(3, 2),
@@ -135,7 +135,7 @@ namespace UnitTests
 				pii(2, 7)
 			};
 			auto result = stableSortPairsByFirst(toSort, 10);
-			vector<pii> expected = 
+			vector<pii> expected =
 			{
 				pii(1, 6),
 				pii(2, 1),
@@ -151,6 +151,45 @@ namespace UnitTests
 				Assert::AreEqual(expected[i].first, result[i].first);
 				Assert::AreEqual(expected[i].second, result[i].second);
 			}
+		}
+
+		TEST_METHOD(TestLcpMy)
+		{
+			vector<int> str = { 1, 2, 1, 2, 2, 3, 1, 3, 1, 1, 2, 0 };
+			auto sa = calculateSuffixArray(str, 4);
+			vector<int> expected = { 11, 8, 9, 0, 2, 6, 10, 1, 3, 4, 7, 5 };
+			Assert::AreEqual(expected.size(), sa.size());
+			for (int i = 0; i < expected.size(); i++)
+			{
+				Assert::AreEqual(expected[i], sa[i]);
+			}
+			auto lcp = calculateLCP(str, sa);
+			expected = { 0, 1, 2, 2, 1, 0, 1, 1, 1, 0, 2, -1 };
+			Assert::AreEqual(expected.size(), lcp.size());
+			for (int i = 0; i < expected.size(); i++)
+			{
+				Assert::AreEqual(expected[i], lcp[i]);
+			}
+		}
+
+		TEST_METHOD(TestSampleLcp)
+		{
+			vector<int> str = { 1, 2, 1, 2, 2, 2, 1, 1, 0 };
+			auto sa = calculateSuffixArray(str, 3);
+			auto lcp = calculateLCP(str, sa);
+			vector<int> expected = { 0, 1, 1, 2, 0, 2, 1, 2, -1 };
+			Assert::AreEqual(expected.size(), lcp.size());
+			for (int i = 0; i < expected.size(); i++)
+			{
+				Assert::AreEqual(expected[i], lcp[i]);
+			}
+		}
+
+		TEST_METHOD(TestLargeLCP)
+		{
+			vector<int> str = generateRandomString(1000000, 100);
+			auto result = calculateSuffixArray(str, 100);
+			auto lcp = calculateLCP(str, result);
 		}
 	};
 }

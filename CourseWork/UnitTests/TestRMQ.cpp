@@ -50,5 +50,17 @@ namespace UnitTests
 				Assert::AreEqual(expectedDepths[i], depths[i]);
 			}
 		}
+
+		TEST_METHOD(TestRMQTestsBlock1)
+		{
+			vector<int> array = {5, 2, 4, 6, 3, 1, 4, 5, 2, 8};
+			RMQ rmq(array);
+			int test1 = rmq.getRMQ(0, 9);
+			Assert::AreEqual(1, test1);
+			int test2 = rmq.getRMQ(0, 0);
+			Assert::AreEqual(5, test2);
+			int test3 = rmq.getRMQ(0, 2);
+			Assert::AreEqual(2, test3);
+		}
 	};
 }

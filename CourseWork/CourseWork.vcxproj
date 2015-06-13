@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rmq.h" />
+    <ClInclude Include="Runs.h" />
     <ClInclude Include="SuffixArray.h" />
   </ItemGroup>
   <ItemGroup>

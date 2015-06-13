@@ -208,6 +208,8 @@ private:
 	}
 
 public:
+	RMQ(){}
+
 	RMQ(vector<int> array)
 	{
 		this->array = array;

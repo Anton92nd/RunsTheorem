@@ -40,7 +40,7 @@ namespace UnitTests
 			srand(time(NULL));
 		}
 
-		TEST_METHOD(TestSmallArray)
+		TEST_METHOD(TestSASmallArray)
 		{
 			vector<int> str = { 1, 2, 1, 0 };
 			auto result = calculateSuffixArray(str, 3);
@@ -52,7 +52,7 @@ namespace UnitTests
 			}
 		}
 
-		TEST_METHOD(TestNotSmallArray)
+		TEST_METHOD(TestSANotSmallArray)
 		{
 			vector<int> str = { 1, 2, 1, 2, 2, 2, 1, 1, 0 };
 			auto result = calculateSuffixArray(str, 3);
@@ -64,28 +64,28 @@ namespace UnitTests
 			}
 		}
 
-		TEST_METHOD(TestSmallRandomString)
+		TEST_METHOD(TestSASmallRandomString)
 		{
 			vector<int> str = generateRandomString(8, 3);
 			auto result = calculateSuffixArray(str, 3);
 			verifySA(result, str);
 		}
 
-		TEST_METHOD(TestMediumRandomString)
+		TEST_METHOD(TestSAMediumRandomString)
 		{
 			vector<int> str = generateRandomString(100, 15);
 			auto result = calculateSuffixArray(str, 15);
 			verifySA(result, str);
 		}
 
-		TEST_METHOD(TestLargeRandomString)
+		TEST_METHOD(TestSALargeRandomString)
 		{
 			vector<int> str = generateRandomString(100000, 100);
 			auto result = calculateSuffixArray(str, 100);
 			verifySA(result, str);
 		}
 
-		TEST_METHOD(TestVeryLargeRandomString)
+		TEST_METHOD(TestSAVeryLargeRandomString)
 		{
 			vector<int> str = generateRandomString(1000000, 100);
 			auto result = calculateSuffixArray(str, 100);
@@ -153,7 +153,7 @@ namespace UnitTests
 			}
 		}
 
-		TEST_METHOD(TestLcpMy)
+		TEST_METHOD(TestLCPMy)
 		{
 			vector<int> str = { 1, 2, 1, 2, 2, 3, 1, 3, 1, 1, 2, 0 };
 			auto sa = calculateSuffixArray(str, 4);
@@ -172,7 +172,7 @@ namespace UnitTests
 			}
 		}
 
-		TEST_METHOD(TestSampleLcp)
+		TEST_METHOD(TestLCPSample)
 		{
 			vector<int> str = { 1, 2, 1, 2, 2, 2, 1, 1, 0 };
 			auto sa = calculateSuffixArray(str, 3);
@@ -185,7 +185,7 @@ namespace UnitTests
 			}
 		}
 
-		TEST_METHOD(TestLargeLCP)
+		TEST_METHOD(TestLCPLarge)
 		{
 			vector<int> str = generateRandomString(1000000, 100);
 			auto result = calculateSuffixArray(str, 100);

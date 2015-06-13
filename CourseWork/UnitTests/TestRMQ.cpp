@@ -61,6 +61,14 @@ namespace UnitTests
 			Assert::AreEqual(5, test2);
 			int test3 = rmq.getRMQ(0, 2);
 			Assert::AreEqual(2, test3);
+			int test4 = rmq.getRMQ(5, 9);
+			Assert::AreEqual(1, test4);
+			int test5 = rmq.getRMQ(6, 8);
+			Assert::AreEqual(2, test5);
+			int test6 = rmq.getRMQ(6, 7);
+			Assert::AreEqual(4, test6);
+			int test7 = rmq.getRMQ(2, 4);
+			Assert::AreEqual(3, test7);
 		}
 	};
 }

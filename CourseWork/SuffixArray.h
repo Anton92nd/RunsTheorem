@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <vector>
-#define DEBUG 0
 
 using namespace std;
 
@@ -222,15 +221,6 @@ vector<int> mergeParts(const vector<int> & s, const vector<int> & As0, const vec
 
 vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 {
-	if (DEBUG)
-	{
-		printf("Calculating array for: ");
-		for (int i = 0; i < s.size(); i++)
-		{
-			printf("%d ", s[i]);
-		}
-		printf("\n");
-	}
 	if (s.size() <= 4)
 	{
 		return sortSimple(s);
@@ -241,15 +231,6 @@ vector<int> calculateSuffixArray(vector<int> & s, int sygma)
 	}
 	int n = s.size();
 	vector<int> s1s2 = getS1S2(s, sygma);
-	if (DEBUG)
-	{
-		printf("S12 encoded by triples:\n");
-		for (int i = 0; i < s1s2.size(); i++)
-		{
-			printf("%d ", s1s2[i]);
-		}
-		printf("\n");
-	}
 	int newSygma = *max_element(s1s2.begin(), s1s2.end()) + 1;
 	vector<int> ss = calculateSuffixArray(s1s2, newSygma);
 	vector<int> As12;

@@ -30,6 +30,8 @@ vector<pii> stack;
 
 int getLCS(int l, int r)
 {
+	if (l < 0)
+		return 0;
 	l = revISA[n - 1 - l];
 	r = revISA[n - 1 - r];
 	if (l > r)
@@ -44,38 +46,6 @@ int getLCP(int l, int r)
 	if (l > r)
 		swap(l, r);
 	return rmq.getRMQ(l, r - 1);
-}
-
-vector<Run> merge(const vector<Run> & a, const vector<Run> & b)
-{
-	vector<Run> result;
-	result.reserve(a.size() + b.size());
-	int i, j;
-	for (i = 0, j = 0; i < a.size() && j < b.size();)
-	{
-		if (a[i] == b[j])
-		{
-			j++;
-			continue;
-		}
-		if (a[i] < b[j])
-		{
-			result.push_back(a[i++]);
-		}
-		else
-		{
-			result.push_back(b[j++]);
-		}
-	}
-	for (; i < a.size(); i++)
-	{
-		result.push_back(a[i]);
-	}
-	for (; j < b.size(); j++)
-	{
-		result.push_back(b[j]);
-	}
-	return result;
 }
 
 vector<Run> calculateRuns(const vector<int> & s, int syg)
@@ -93,7 +63,7 @@ vector<Run> calculateRuns(const vector<int> & s, int syg)
 	revLCP = calculateLCP(revStr, revSA);
 	rmq = RMQ(LCP);
 	revRmq = RMQ(revLCP);
-	vector<Run> runs[2];
+	vector<Run> runs;
 	stack.push_back(pii(n - 1, n - 1));
 	for (int i = n - 2; i >= 0; i--)
 	{
@@ -114,7 +84,7 @@ vector<Run> calculateRuns(const vector<int> & s, int syg)
 		int p = j - i + 1;
 		if (j1 - i1 + 1 >= 2 * p && i1 < i && i <= i1 + p)
 		{
-			runs[0].push_back(Run(i1, j1, p));
+			runs.push_back(Run(i1, j1, p));
 		}
 	}
 	stack.clear();
@@ -138,10 +108,11 @@ vector<Run> calculateRuns(const vector<int> & s, int syg)
 		int p = j - i + 1;
 		if (j1 - i1 + 1 >= 2 * p && i1 < i && i <= i1 + p)
 		{
-			runs[1].push_back(Run(i1, j1, p));
+			runs.push_back(Run(i1, j1, p));
 		}
 	}
-	reverse(runs[0].begin(), runs[0].end());
-	reverse(runs[1].begin(), runs[1].end());
-	return merge(runs[0], runs[1]);
+	sort(runs.begin(), runs.end());
+	auto it = unique(runs.begin(), runs.end());
+	runs.resize(it - runs.begin());
+	return runs;
 }

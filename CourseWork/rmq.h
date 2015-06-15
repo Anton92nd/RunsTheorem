@@ -24,6 +24,7 @@ private:
 	vector<vector<vector<int>>> table;
 	vector<int> blockTypes;
 	vector<vector<int>> sparse;
+	vector<int> logFloor;
 
 	int blockSize;
 	Pnode tree;
@@ -122,8 +123,25 @@ private:
 		return mask;
 	}
 
+	void calculateLogFloor(int size)
+	{
+		int deg = 1;
+		int cur = -1;
+		logFloor.resize(size);
+		for (int i = 1; i < size; i++)
+		{
+			if (i == deg)
+			{
+				cur++;
+				deg <<= 1;
+			}
+			logFloor[i] = cur;
+		}
+	}
+
 	void buildSparse()
 	{
+		calculateLogFloor(depths.size() + 5);
 		blockSize = 0;
 		while ((1 << blockSize) <= depths.size())
 			blockSize++;
@@ -136,9 +154,7 @@ private:
 		}
 		sparse.resize(depths.size() / blockSize);
 		blockTypes.resize(sparse.size());
-		int log = 0;
-		while ((1 << log) <= sparse.size())
-			log++;
+		int log = logFloor[sparse.size()] + 1;
 		for (int i = 0; i < depths.size(); i += blockSize)
 		{
 			blockTypes[i / blockSize] = getBlockType(i);
@@ -170,9 +186,7 @@ private:
 
 	int getInner(int l, int r)
 	{
-		int k = 0;
-		while ((1 << k) <= (r - l)) k++;
-		k--;
+		int k = logFloor[r - l];
 		int x = sparse[l][k], y = sparse[r - (1 << k)][k];
 		return depths[x] <= depths[y] ? x : y;
 	}

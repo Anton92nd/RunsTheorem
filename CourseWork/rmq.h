@@ -181,6 +181,7 @@ private:
 		vertices.reserve(2 * array.size());
 		first.resize(array.size());
 		buildPairs(tree, 0);
+		deleteTree(tree);
 		buildSparse();
 	}
 
@@ -219,6 +220,15 @@ private:
 			]
 		];
 		return min(left, min(inner, right));
+	}
+
+	void deleteTree(Pnode t)
+	{
+		if (t == NULL)
+			return;
+		deleteTree(t->l);
+		deleteTree(t->r);
+		delete t;
 	}
 
 public:

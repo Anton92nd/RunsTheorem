@@ -220,23 +220,24 @@ private:
 		delete t;
 	}
 
-public:
-	RMQ(){}
-
-	~RMQ()
+	void buildYourself()
 	{
-		deleteTree(tree);
-	}
-
-	void buildYourself(const vector<int> & arr)
-	{
-		array = arr;
 		tree = buildCartesian();
 		depths.reserve(2 * array.size());
 		vertices.reserve(2 * array.size());
 		first.resize(array.size());
 		buildPairs(tree, 0);
+		deleteTree(tree);
 		buildSparse();
+	}
+
+public:
+	RMQ(){}
+
+	RMQ(const vector<int> & arr)
+	{
+		array = arr;
+		buildYourself();
 	}
 
 	vector<int> getDepths()

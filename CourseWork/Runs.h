@@ -65,8 +65,8 @@ vector<Run> calculateRuns(const vector<int> & s, int syg)
 	revISA = inverse(revSA, revStr.size());
 	LCP = calculateLCP(str, SA);
 	revLCP = calculateLCP(revStr, revSA);
-	rmq.buildYourself(LCP);
-	revRmq.buildYourself(revLCP);
+	rmq = RMQ(LCP);
+	revRmq = RMQ(revLCP);
 	precalcEnd = clock();
 	vector<Run> runs;
 	stack.push_back(pii(n - 1, n - 1));

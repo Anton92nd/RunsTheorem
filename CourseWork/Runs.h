@@ -1,5 +1,6 @@
 #include "SuffixArray.h"
 #include "rmq.h"
+#include <ctime>
 
 using namespace std;
 
@@ -48,8 +49,11 @@ int getLCP(int l, int r)
 	return rmq.getRMQ(l, r - 1);
 }
 
+int precalcBegin, precalcEnd, calcEnd;
+
 vector<Run> calculateRuns(const vector<int> & s, int syg)
 {
+	precalcBegin = clock();
 	n = s.size();
 	str = s;
 	sygma = syg + 1;
@@ -61,8 +65,9 @@ vector<Run> calculateRuns(const vector<int> & s, int syg)
 	revISA = inverse(revSA, revStr.size());
 	LCP = calculateLCP(str, SA);
 	revLCP = calculateLCP(revStr, revSA);
-	rmq = RMQ(LCP);
-	revRmq = RMQ(revLCP);
+	rmq.buildYourself(LCP);
+	revRmq.buildYourself(revLCP);
+	precalcEnd = clock();
 	vector<Run> runs;
 	stack.push_back(pii(n - 1, n - 1));
 	for (int i = n - 2; i >= 0; i--)
@@ -111,8 +116,9 @@ vector<Run> calculateRuns(const vector<int> & s, int syg)
 			runs.push_back(Run(i1, j1, p));
 		}
 	}
-	sort(runs.begin(), runs.end());
+	calcEnd = clock();
+	/*sort(runs.begin(), runs.end());
 	auto it = unique(runs.begin(), runs.end());
-	runs.resize(it - runs.begin());
+	runs.resize(it - runs.begin());*/
 	return runs;
 }

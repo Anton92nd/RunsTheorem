@@ -174,17 +174,6 @@ private:
 		}
 	}
 
-	void buildYourself()
-	{
-		tree = buildCartesian();
-		depths.reserve(2 * array.size());
-		vertices.reserve(2 * array.size());
-		first.resize(array.size());
-		buildPairs(tree, 0);
-		deleteTree(tree);
-		buildSparse();
-	}
-
 	int getInner(int l, int r)
 	{
 		int k = logFloor[r - l];
@@ -234,10 +223,20 @@ private:
 public:
 	RMQ(){}
 
-	RMQ(vector<int> array)
+	~RMQ()
 	{
-		this->array = array;
-		buildYourself();
+		deleteTree(tree);
+	}
+
+	void buildYourself(const vector<int> & arr)
+	{
+		array = arr;
+		tree = buildCartesian();
+		depths.reserve(2 * array.size());
+		vertices.reserve(2 * array.size());
+		first.resize(array.size());
+		buildPairs(tree, 0);
+		buildSparse();
 	}
 
 	vector<int> getDepths()
